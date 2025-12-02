@@ -1,9 +1,13 @@
 package net.zyra;
 
+import lombok.extern.log4j.Log4j2;
 import net.zyra.annotation.Log;
 import net.zyra.annotation.Retry;
 import net.zyra.core.AnnotationProxies;
 
+import java.util.Random;
+
+@Log4j2
 public class Main {
     private int count = 0;
 
@@ -24,6 +28,6 @@ public class Main {
     public static void main(String[] args) {
         Main service = AnnotationProxies.create(Main.class);
         service.retryTest();
-        service.logTest("test");
+        log.info(service.logTest("test"));
     }
 }

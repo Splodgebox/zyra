@@ -1,12 +1,13 @@
 package net.zyra.processor;
 
+import lombok.extern.log4j.Log4j2;
 import net.zyra.core.AnnotationScanner;
-import net.zyra.exception.AnnotationProcessingException;
 import net.zyra.annotation.Retry;
 import net.zyra.core.AnnotationProcessor;
 
 import java.lang.reflect.Method;
 
+@Log4j2
 public class RetryAnnotation extends AnnotationProcessor<Retry> {
     public RetryAnnotation() {
         super(Retry.class);
@@ -26,18 +27,19 @@ public class RetryAnnotation extends AnnotationProcessor<Retry> {
                 return wrapper.invoke();
             } catch (Exception e) {
                 if (i == attempts - 1) {
-                    throw new AnnotationProcessingException("Failed to process annotated method after " + attempts + " attempts: " + method.getName(), e);
+                    log.error("Failed to process annotated method after {} attempts: {}", attempts, method.getName(), e);
                 }
                 try {
                     Thread.sleep(delayInMs);
                 } catch (InterruptedException ie) {
                     Thread.currentThread().interrupt();
-                    throw new AnnotationProcessingException("Retry interrupted", ie);
+                    log.error("Retry interrupted", ie);
                 }
             }
         }
 
-        throw new AnnotationProcessingException("Failed to process annotated method after " + attempts + " attempts: " + method.getName());
+        log.error("Failed to process annotated method after {} attempts: {}", attempts, method.getName());
+        return wrapper;
     }
 }
 
