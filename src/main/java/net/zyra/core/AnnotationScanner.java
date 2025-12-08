@@ -5,6 +5,7 @@ import net.bytebuddy.implementation.InvocationHandlerAdapter;
 import net.bytebuddy.matcher.ElementMatchers;
 import net.zyra.processor.LogAnnotation;
 import net.zyra.processor.RetryAnnotation;
+import net.zyra.processor.TimeAnnotation;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.InvocationHandler;
@@ -25,6 +26,7 @@ public class AnnotationScanner<T> {
     private void registerDefaultProcessors() {
         register(new RetryAnnotation());
         register(new LogAnnotation());
+        register(new TimeAnnotation());
     }
 
     public void register(AnnotationProcessor<?> processor) {
